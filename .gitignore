@@ -1,0 +1,8 @@
+# ignore .vscode
+.vscode
+
+# ignore cmake build files
+build
+
+# ignore cmakelists
+CMakeLists.txt
