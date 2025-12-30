@@ -1,8 +1,8 @@
-# ignore .vscode
-.vscode
-
-# ignore cmake build files
-build
-
-# ignore cmakelists
-CMakeLists.txt
+/build/
+/.vscode/.browse.VC.db
+*.exe
+*.out
+*.o
+*.obj
+CMakeCache.txt
+CMakeFiles/
