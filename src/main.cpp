@@ -11,25 +11,22 @@
 
 using std::string;
 
-// global settings class to store all of the window settings, not necessary, but nice for organization
-class GlobalSettings {
-    public:
-        float screenWidth;
-        float screenHeight;
-        string windowTitle;
-        float fps;
-
-        GlobalSettings(float _screenWidth, float _screenHeight, string _windowTitle, float _fps) {
-            screenWidth = _screenWidth;
-            screenHeight = _screenHeight;
-            windowTitle = _windowTitle;
-            fps = _fps;
-        }
+struct GameSettings {
+    float screenWidth, screenHeight, fps;
+    string windowTitle;
 };
-GlobalSettings gs = GlobalSettings(800, 450, "Prototype Platformer", 60);
+GameSettings SetSettings(float w, float h, float f, string wt) {
+    GameSettings gs;
+    gs.screenWidth = w;
+    gs.screenHeight = h;
+    gs.fps = f;
+    gs.windowTitle = wt;
+}
 
 // create game manager object
 GameManager gm;
+// create game settings struct variable
+GameSettings gs = SetSettings(800, 450, 60, "Prototype Platformer");
 
 int main() {
     // initialize window and set fps
