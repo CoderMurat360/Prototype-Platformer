@@ -21,6 +21,8 @@ GameSettings SetSettings(float w, float h, float f, string wt) {
     gs.screenHeight = h;
     gs.fps = f;
     gs.windowTitle = wt;
+
+    return gs;
 }
 
 // create game manager object
