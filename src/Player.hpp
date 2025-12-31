@@ -1,6 +1,7 @@
 #pragma once
 
 #include "raylib.h"
+#include "raymath.h"
 #include <vector>
 
 class Platform;
@@ -9,18 +10,27 @@ class GameManager;
 
 class Player {
     private:
-        void Move();
+        float velocityX = 0.0f;     // horizontal velocity
+        float velocityY = 0.0f;     // vertical velocity (used for jumping)
+
+        float acceleration = 2000.0f;   // how fast Player speeds up
+        float deceleration = 2500.0f;   // how fast Player slows down
+        float maxSpeed = 300.0f;        // max horizontal speed
+
+        // all of these are in pixels per second
+        float gravity = 1800.0f;        // gravity will be per second
+        float jumpVelocity = -650.0f;   // jump power
+        float terminalVelocity = 1200.0f;   // max falling speed
+
+        void Move(float dt);
         void Jump();
-        void Gravity();
+        void Gravity(float dt);
         void platformCollision(const std::vector<Platform>& platforms, float prevX, float prevY);
         void itemCollision(std::vector<Item>& items);
 
     public:
         float xPos, yPos;
         int width, height;
-        float speed = 5.0f;
-        float velocity = 0.0f;
-        float gravity = 0.4f;
         bool onGround = false;
         bool hasGravity = true;
         Color color;

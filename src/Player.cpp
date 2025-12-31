@@ -14,25 +14,47 @@ Player::Player(float x, float y, int w, int h, Color c) {
     color = c;
 }
 
-void Player::Move() {
-    if (IsKeyDown(KEY_A)) {
-        xPos -= speed;
+void Player::Move(float dt) {
+    float input = 0.0f;
+
+    if (IsKeyDown(KEY_A)) { input -= 1.0f; }
+    if (IsKeyDown(KEY_D)) { input += 1.0f; }
+
+    // if Player is moving
+    if (input != 0.0f) {
+        // accelerate
+        velocityX += input * acceleration * dt;
+    } else {
+        // decelerate (snappy stop, no ice)
+        if (velocityX > 0) {
+            velocityX -= deceleration * dt;
+            if (velocityX < 0) velocityX = 0;
+        } else if (velocityX < 0) {
+            velocityX += deceleration * dt;
+            if (velocityX > 0) velocityX = 0;
+        }
     }
-    else if (IsKeyDown(KEY_D)) {
-        xPos += speed;
-    }
+
+    // clamp speed
+    if (velocityX > maxSpeed) { velocityX = maxSpeed; }
+    if (velocityX < -maxSpeed) { velocityX = -maxSpeed; }
+
+    // apply movement
+    xPos += velocityX * dt;
 }
 
+
 void Player::Jump() {
-    if (IsKeyDown(KEY_SPACE) && onGround) {
-        velocity = -10.0f;
+    if (IsKeyPressed(KEY_SPACE) && onGround) {
+        velocityY = jumpVelocity;
         onGround = false;
     }
 }
 
-void Player::Gravity() {
-    velocity += gravity;
-    yPos += velocity;
+void Player::Gravity(float dt) {
+    velocityY += gravity * dt;
+    velocityY = Clamp(velocityY, -10000.0f, terminalVelocity);
+    yPos += velocityY * dt;
 }
 
 void Player::platformCollision(const std::vector<Platform>& platforms, float prevX, float prevY) {
@@ -68,13 +90,13 @@ void Player::platformCollision(const std::vector<Platform>& platforms, float pre
             // Coming from above
             if ((prevBottom <= platTop) && (playerBottom > platTop)) {
                 yPos = platTop - height;
-                velocity = 0;
+                velocityY = 0;
                 onGround = true;
             }
             // Coming from below
             else if (prevTop >= platBottom && playerTop < platBottom) {
                 yPos = platBottom;
-                velocity = 0;
+                velocityY = 0;
             }
             // Coming from left
             else if (prevRight <= platLeft && playerRight > platLeft) {
@@ -98,20 +120,21 @@ void Player::itemCollision(std::vector<Item>& items) {
 }
 
 void Player::Update(const std::vector<Platform>& platforms, std::vector<Item>& items) {
+    float deltaTime = GetFrameTime();
     // store previous position
-        float prevX = xPos;
-        float prevY = yPos;
+    float prevX = xPos;
+    float prevY = yPos;
 
     // check for jumping
-       Jump();
+    Jump();
 
     // do gravity
     if (hasGravity) {
-        Gravity();
+        Gravity(deltaTime);
     }
 
     // check for moving
-    Move();
+    Move(deltaTime);
 
     // check for platform collision
     platformCollision(platforms, prevX, prevY);

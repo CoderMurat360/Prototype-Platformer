@@ -36,7 +36,7 @@ int main() {
     SetTargetFPS(gs.fps);
 
     // make player
-    Player player = Player(gs.screenWidth/2, gs.screenHeight/2, 50, 50, RED);
+    Player player = Player(400, 300, 50, 50, RED);
 
     // make platforms
     std::vector<Platform> platforms;
