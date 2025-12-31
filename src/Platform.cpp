@@ -5,7 +5,7 @@ Platform::Platform(float x, float y, int w, int h, Color c) {
     yPos = y;
     width = w;
     height = h;
-    color = c;
+    color = c; 
 }
 
 void Platform::Draw() {

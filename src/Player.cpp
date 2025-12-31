@@ -15,8 +15,12 @@ Player::Player(float x, float y, int w, int h, Color c) {
 }
 
 void Player::Move() {
-    if (IsKeyDown(KEY_A)) xPos -= speed;
-    else if (IsKeyDown(KEY_D)) xPos += speed;
+    if (IsKeyDown(KEY_A)) {
+        xPos -= speed;
+    }
+    else if (IsKeyDown(KEY_D)) {
+        xPos += speed;
+    }
 }
 
 void Player::Jump() {
@@ -32,19 +36,53 @@ void Player::Gravity() {
 }
 
 void Player::platformCollision(const std::vector<Platform>& platforms, float prevX, float prevY) {
+    // get player rectangle data
     Rectangle playerRec = getRec();
 
+    // go through all of the platforms to check
     for (const auto& platform : platforms) {
+        // get the platform rectangle data
         Rectangle platRec = platform.getRec();
 
+        // if there is a collision, 
         if (CheckCollisionRecs(playerRec, platRec)) {
-            float prevBottom = prevY + height;
+            // assign a bunch of variables
+            // the coordinates of all the player edges
+            float playerBottom = playerRec.y + playerRec.height;
+            float playerTop = playerRec.y;
+            float playerLeft = playerRec.x;
+            float playerRight = playerRec.x + playerRec.width;
+                    
+            // the coordinates of all the platform edges
+            float platBottom = platRec.y + platRec.height;
             float platTop = platRec.y;
+            float platLeft = platRec.x;
+            float platRight = platRec.x + platRec.width;
 
-            if (prevBottom <= platTop) {
+            // the coordinates of the player's edges from the previous frame
+            float prevBottom = prevY + height;
+            float prevTop = prevY;
+            float prevLeft = prevX;
+            float prevRight = prevX + width;
+
+            // Coming from above
+            if ((prevBottom <= platTop) && (playerBottom > platTop)) {
                 yPos = platTop - height;
                 velocity = 0;
                 onGround = true;
+            }
+            // Coming from below
+            else if (prevTop >= platBottom && playerTop < platBottom) {
+                yPos = platBottom;
+                velocity = 0;
+            }
+            // Coming from left
+            else if (prevRight <= platLeft && playerRight > platLeft) {
+                xPos = platLeft - width;
+            }
+            // Coming from right
+            else if (prevLeft >= platRight && playerLeft < platRight) {
+                xPos = platRight;
             }
         }
     }
@@ -60,14 +98,25 @@ void Player::itemCollision(std::vector<Item>& items) {
 }
 
 void Player::Update(const std::vector<Platform>& platforms, std::vector<Item>& items) {
-    float prevX = xPos;
-    float prevY = yPos;
+    // store previous position
+        float prevX = xPos;
+        float prevY = yPos;
 
-    Jump();
-    Gravity();
+    // check for jumping
+       Jump();
+
+    // do gravity
+    if (hasGravity) {
+        Gravity();
+    }
+
+    // check for moving
     Move();
 
+    // check for platform collision
     platformCollision(platforms, prevX, prevY);
+
+    // check for item collision
     itemCollision(items);
 }
 
