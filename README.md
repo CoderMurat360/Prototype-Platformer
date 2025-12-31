@@ -21,4 +21,4 @@ You need all three:
 
 
 ## Notes
-- The .vscode folder is optional and only for VS Code users
+- The .vscode folder is optional and only for VS Code
