@@ -121,12 +121,10 @@ void Player::itemCollision(std::vector<Item>& items) {
 
 void Player::Update(const std::vector<Platform>& platforms, std::vector<Item>& items) {
     float deltaTime = GetFrameTime();
+
     // store previous position
     float prevX = xPos;
     float prevY = yPos;
-
-    // check for jumping
-    Jump();
 
     // do gravity
     if (hasGravity) {
@@ -136,8 +134,13 @@ void Player::Update(const std::vector<Platform>& platforms, std::vector<Item>& i
     // check for moving
     Move(deltaTime);
 
+    // assume the player isn't grounded until the collision proves it
+    onGround = false;
     // check for platform collision
     platformCollision(platforms, prevX, prevY);
+
+    // check for jumping
+    Jump();
 
     // check for item collision
     itemCollision(items);
