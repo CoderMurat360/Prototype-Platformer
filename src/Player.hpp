@@ -18,9 +18,9 @@ class Player {
         float maxSpeed = 300.0f;        // max horizontal speed
 
         // all of these are in pixels per second
-        float gravity = 1800.0f;        // gravity will be per second
+        const float gravity = 1800.0f;        // gravity will be per second
         float jumpVelocity = -650.0f;   // jump power
-        float terminalVelocity = 1200.0f;   // max falling speed
+        const float terminalVelocity = 1200.0f;   // max falling speed
 
         void Move(float dt);
         void Jump();

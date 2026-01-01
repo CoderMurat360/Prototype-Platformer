@@ -6,13 +6,13 @@
 // GameManager is global in main.cpp
 extern class GameManager gm;
 
-Player::Player(float x, float y, int w, int h, Color c) {
-    xPos = x;
-    yPos = y;
-    width = w;
-    height = h;
-    color = c;
-}
+Player::Player(float x, float y, int w, int h, Color c) :
+    xPos(x),
+    yPos(y),
+    width(w),
+    height(h),
+    color(c)
+{}
 
 void Player::Move(float dt) {
     float input = 0.0f;
